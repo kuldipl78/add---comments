@@ -1,5 +1,9 @@
 import './index.css'
-import React, {Component} from 'react'
+
+import {Component} from 'react'
+
+import {v4 as uuidv4} from 'uuid'
+
 import CommentItem from '../CommentItem'
 
 const initialContainerBackgroundClassNames = [
@@ -26,14 +30,24 @@ class Comments extends Component {
   handleOnButtonElement = event => {
     event.preventDefault()
 
+    const initialBgColor =
+      initialContainerBackgroundClassNames[
+        Math.ceil(
+          Math.random() * initialContainerBackgroundClassNames.length - 1,
+        )
+      ]
+
     const {inputName, comment} = this.state
     if (inputName.trim() && comment.trim()) {
       const newComment = {
-        id: Date.now(),
+        id: uuidv4(),
+        date: new Date().toLocaleString(),
         name: inputName,
         text: comment,
         liked: false,
+        initialClassName: initialBgColor,
       }
+
       this.setState(prevState => ({
         comments: [...prevState.comments, newComment],
         count: prevState.count + 1,
@@ -74,7 +88,7 @@ class Comments extends Component {
                 className="name"
                 placeholder="Your Name"
               />
-              <input
+              <textarea
                 type="textarea"
                 value={comment}
                 onChange={this.handleOnChangeComment}
